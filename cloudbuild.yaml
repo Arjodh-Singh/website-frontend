@@ -1,5 +1,16 @@
 steps:
-- name: 'docker'
-  args: ['build','-t','gcr.io/$PROJECT_ID/website-frontend','.']
-images:
-- 'gcr.io/$PROJECT_ID/website-frontend'
+	# build the container image
+- name: "gcr.io/cloud-builders/docker"
+  args: ["build","-t","gcr.io/$PROJECT_ID/website-frontend","."]
+  # push container image
+- name: "gcr.io/cloud-builders/docker"
+  args: ["push", "gcr.io/$PROJECT_ID/website-frontend"]
+  # deploy container image to GKE
+  - name: "gcr.io/cloud-builders/gke-deploy"
+    args:
+    - run
+    - --filename=gke.yaml
+    - --image=gcr.io/$PROJECT_ID/website-frontend
+    - --location=us-central1-c
+    - --cluster=website-frontend
+    - --namespace=website-frontend-test
