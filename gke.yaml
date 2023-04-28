@@ -20,3 +20,19 @@ spec:
         env:
           - name: PORT
             value: "3000"
+---
+apiVersion: "v1"
+kind: "Service"
+metadata:
+  name: "gcp-website-frontend-gke-service"
+  namespace: "website-frontend-test"
+  labels:
+    app.kubernetes.io/managed-by: "gcp-cloud-build-deploy"
+spec:
+  ports:
+  - protocol: "TCP"
+    port: 3000
+    targetPort: 3000
+  selector:
+    app: "gcp"
+  type: "LoadBalancer"
